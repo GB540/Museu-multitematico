@@ -1,0 +1,156 @@
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MUSEU_VENDAS 10000
+#define MUSEU_OBRAS 4
+
+struct Obra {
+    char nome[50];
+    float preco_base;
+};
+
+struct Ingresso {
+    int tipo;  // 0: inteira, 1: meia entrada, 2: gratuito
+    struct Obra obra;
+};
+
+struct Pagamento {
+    int forma;  // 0: dinheiro, 1: cartão de credito, 2: cartao de debito, 3: pix
+};
+
+struct Venda {
+    char nome_cliente[50];
+    struct Ingresso ingresso;
+    int quantidade;
+    struct Pagamento pagamento;
+};
+
+struct Venda vendas[MUSEU_VENDAS];
+int total_vendas = 0;
+
+struct Obra obras[MUSEU_OBRAS] = {
+    {"100 anos da Semana da Arte Moderna", 30.0},
+    {"150 anos de Santos Dumont", 30.0},
+    {"Jogos olimpicos de Paris 2024", 30.0},
+    {"Evolucao da realidade virtual: Apple Vision Pro", 30.0},
+};
+
+void salvarRelatorioCSV() {
+    FILE *arquivo = fopen("relatorio.csv", "w");
+
+    if (arquivo == NULL) {
+        printf("Erro ao abrir o arquivo para escrita.\n");
+        return;
+    }
+
+    fprintf(arquivo, "Cliente,Obra,Tipo,Quantidade,Preco Total,Forma de Pagamento\n");
+
+    for (int i = 0; i < total_vendas; i++) {
+        fprintf(arquivo, "%s,%s,%d,%d,%.2f,%d\n",
+                vendas[i].nome_cliente,
+                vendas[i].ingresso.obra.nome,
+                vendas[i].ingresso.tipo,
+                vendas[i].quantidade,
+                vendas[i].quantidade * vendas[i].ingresso.obra.preco_base,
+                vendas[i].pagamento.forma);
+    }
+
+    fclose(arquivo);
+    printf("Relatorio salvo em relatorio.csv\n");
+}
+
+void realizarVenda() {
+    if (total_vendas < MUSEU_VENDAS) {
+        printf("Nome do cliente: ");
+        scanf("%s", vendas[total_vendas].nome_cliente);
+
+        printf("Escolha a obra (0-%d): \n", MUSEU_OBRAS - 1);
+        for (int i = 0; i < MUSEU_OBRAS; i++) {
+            printf("%d. %s\n", i, obras[i].nome);
+        }
+
+        int escolha;
+        scanf("%d", &escolha);
+
+        if (escolha < 0 || escolha >= MUSEU_OBRAS) {
+            printf("Escolha invalida.\n");
+            return;
+        }
+
+        vendas[total_vendas].ingresso.obra = obras[escolha];
+
+        printf("Tipo de ingresso (0: inteira, 1: meia entrada, 2: gratuito): ");
+        scanf("%d", &vendas[total_vendas].ingresso.tipo);
+
+        printf("Quantidade de ingressos: ");
+        scanf("%d", &vendas[total_vendas].quantidade);
+
+        switch (vendas[total_vendas].ingresso.tipo) {
+        case 0:
+            vendas[total_vendas].ingresso.obra.preco_base = 30.0;
+            break;
+        case 1:
+            vendas[total_vendas].ingresso.obra.preco_base = 15.0;
+            break;
+        case 2:
+            vendas[total_vendas].ingresso.obra.preco_base = 0.0;
+            break;
+        default:
+            printf("Tipo de ingresso invalido.\n");
+            return;
+        }
+
+        printf("Escolha a forma de pagamento (0: dinheiro, 1: cartao de credito, 2: cartao de debito, 3: pix): ");
+        scanf("%d", &vendas[total_vendas].pagamento.forma);
+
+        printf("Venda realizada com sucesso.\n");
+        total_vendas++;
+    }
+    else {
+        printf("Limite de vendas atingido.\n");
+    }
+}
+
+void mostrarRelatorio() {
+    printf("\nRelatorio de Vendas:\n");
+
+    for (int i = 0; i < total_vendas; i++) {
+        printf("Cliente: %s | Obra: %s | Tipo: %d | Quantidade: %d | Preco Total: %.2f | Forma de Pagamento: %d\n",
+               vendas[i].nome_cliente,
+               vendas[i].ingresso.obra.nome,
+               vendas[i].ingresso.tipo,
+               vendas[i].quantidade,
+               vendas[i].quantidade * vendas[i].ingresso.obra.preco_base,
+               vendas[i].pagamento.forma);
+    }
+}
+
+int main() {
+    int opcao;
+
+    do {
+        printf("\nMenu:\n1. Realizar Venda\n2. Mostrar Relatorio\n0. Sair\nEscolha uma opcao: ");
+        scanf("%d", &opcao);
+
+        switch (opcao) {
+            case 1:
+                realizarVenda();
+                break;
+            case 2:
+                mostrarRelatorio();
+                salvarRelatorioCSV();
+                break;
+            case 0:
+                printf("Saindo do programa.\n");
+                break;
+            default:
+                printf("Opcao invalida. Tente novamente.\n");
+        }
+
+    } while (opcao != 0);
+
+    return 0;
+}
