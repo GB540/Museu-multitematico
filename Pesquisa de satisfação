@@ -1,0 +1,28 @@
+#include <stdio.h>
+
+
+int main(void) {
+    int opcao;
+
+    printf("O Museu Multitematico de Sao Paulo busca tornar a visita de todos uma experiencia enriquecedora.\nEstamos empenhados em ouvir a sua opiniao para melhorar ainda mais.\nSua participacao nesta pesquisa e fundamental para contribuir para o nosso constante progresso.\n\nSobre a exposicao 150 anos de Santos Dumont, classifique sua experiencia:\n  1 - Muito satisfeito\n  2 - Parcialmente satisfeito\n  3 - Nem satisfeito, nem insatisfeito\n  4 - Parcialmente insatisfeito\n  5 - Muito insatisfeito\n Digite sua opcao de 1 a 5: ");
+    scanf_s("%d", &opcao);
+
+    switch (opcao) {
+    case 1:
+        printf("\nAdoramos saber que esta satisfeito! Obrigada por compartilhar! ");
+        break;
+    case 2:
+        printf("\nAgradecemos seu feedback positivo! Obrigada por compartilhar! ");
+        break;
+    case 3:
+        printf("\nObrigada pelo feedback! Sentimos muito pela sua experiencia ter sido tao generica.\nFaremos tudo que for possivel para atender melhor suas expectativas");
+    case 4:
+        printf("\nObrigada pelo feedback! Sentimos muito pela sua experiencia.\nSuas criticas nos inspiram a fazer mudancas, para garantir proximas visitas mais agradaveis.");
+    case 5:
+        printf("\nObrigada pelo feedback! Sentimos muito pela sua experiencia.\nSuas criticas nos inspiram a fazer mudancas, para garantir próximas visitas mais agradaveis.");
+        break;
+    default:
+        printf("\nDigite de 1 a 5 para classificar sua experiencia");
+        break;
+    }
+}
